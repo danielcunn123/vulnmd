@@ -12,7 +12,7 @@ A sample database from cherrytree is the foundation of this project, to generate
 * RedStar OS
 * Parrot OS
 
-The goal of this project is to learn what advisories are, which vulnerabilities exist on commonly used Linux distrobutions.
+The goal of this project is to learn what advisories are, simplify the reporting process, determine which vulnerabilities exist on commonly used Linux distrobutions.
 
 
 ## 1. Install system packages
