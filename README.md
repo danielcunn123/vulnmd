@@ -1,3 +1,20 @@
+## VulnMD
+
+Vulnmd is a tool for cybersecurity professionals who wish to obtain source code for vulnerable products.
+
+A sample database from cherrytree is the foundation of this project, to generate a local database containing fixed & vulnerable source code - accross multiple Linux distrobutions. 
+* Debian
+* Ubuntu
+* Kylin Linux
+* Astra Linux
+* Kali Linux
+* BOSS Linux
+* RedStar OS
+* Parrot OS
+
+The goal of this project is to learn what advisories are, which vulnerabilities exist on commonly used Linux distrobutions.
+
+
 ## 1. Install system packages
 
 ```bash
