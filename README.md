@@ -82,12 +82,7 @@ python3 main.py fetch-sources vuln_db \
 python3 main.py fetch-sources vuln_db \
   --limit 5 \
   --resume \
-  --model gemini-3.1-pro-preview \
-  --resolution-attempts 1 \
-  --gemini-min-interval 70 \
-  --gemini-max-requests 5 \
-  --gemini-429-retries 0 \
-  --gemini-timeout 1800
+  --model gemini-2.5-pro \
 ```
 
 
@@ -118,10 +113,6 @@ Use a one-request summary budget:
 python3 main.py analyse-sources vuln_db \
   --advisory DSA-4502-1 \
   --with-gemini \
-  --model gemini-3.1-pro-preview \
+  --model gemini-2.5-pro \
   --force-gemini \
-  --gemini-min-interval 70 \
-  --gemini-max-requests 1 \
-  --gemini-429-retries 0 \
-  --gemini-timeout 1800
 ```
