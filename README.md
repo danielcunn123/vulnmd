@@ -1,4 +1,4 @@
-## VulnMD
+# VulnMD
 
 Vulnmd is a tool for cybersecurity professionals who wish to obtain source code for vulnerable products.
 
