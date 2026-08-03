@@ -22,38 +22,70 @@ sudo apt install -y \
 ```
 
 
-## Complete v1.6 workflow
+# Confirm VulnMD can see the model.
+python3 main.py doctor vuln_db --probe-gemma
+```
+
+If the `lms` daemon works on your installation, `lms server start --port 1234`
+is an optional command-line alternative. The GUI server does not require the
+`lms` daemon to be healthy.
+
+VulnMD sends generation requests to LM Studio's native
+`http://127.0.0.1:1234/api/v1/chat` endpoint and uses `/v1/models` only for
+model discovery. Configure the server root if your server differs:
 
 ```bash
-# 1. Expand CherryTree into the canonical Markdown database.
+export VULNMD_LMSTUDIO_URL=http://127.0.0.1:1234
+export VULNMD_GEMMA_MODEL=google/gemma-4-26b-a4b-qat
+```
+
+No cloud key is required. If LM Studio authentication is enabled, set
+`VULNMD_LMSTUDIO_API_KEY`.
+
+## Complete workflow
+
+```bash
+# Build the Markdown database from CherryTree.
 python3 main.py build -i Investigation01.ctd -o vuln_db
 
-# 2. Fetch already-resolved vulnerable/fixed upstream Git revisions.
+# Start one clean pass over every eligible advisory. Previous v1/automatic
+# mappings are archived but are not reused. Gemma may refine a partial answer
+# across three prompts; Python validates the resulting distinct Git objects.
+python3 main.py resolve-git-sources vuln_db --reresolve-all
+
+# If that long pass is interrupted, continue it without --reresolve-all.
+python3 main.py resolve-git-sources vuln_db --resume
+
+# Materialize the validated mappings with the original v1 Git fetch/archive
+# logic. This step does not invoke LM Studio.
 python3 main.py fetch-sources vuln_db --no-resolve --resume
 
-# 3. Generate deterministic source comparisons without Gemini.
-python3 main.py analyse-sources vuln_db --no-gemini --resume
+# Deterministic analysis reads those source/trees and does not start AI.
+python3 main.py analyse-sources vuln_db --no-gemma --resume
 
-# 4. Optionally add one Gemini summary per advisory.
-python3 main.py analyse-sources vuln_db --with-gemini --resume \
-  --model gemini-3.1-pro-preview
+# Analyze one advisory with local Gemma.
+python3 main.py analyse-advisory vuln_db DSA-5885-1
 
-# 5. Refresh source/fetch status.
+# Or enrich every ready advisory, resumably.
+python3 main.py analyse-sources vuln_db --with-gemma --resume
 python3 main.py write-status vuln_db
 
-# 6. Stage and analyze one background LAN capture.
-python3 main.py import-pcap x.pcap --output builder/pcap
-python3 main.py analyse-pcap vuln_db --output builder/pcap
-
-# 7. Optionally split a separate package/update capture and extract HTTP evidence.
-python3 main.py extract-pcap packages.pcap --output builder/pcap
-
-# 8. Export the portable Maltego network/vulnerability graph.
-python3 main.py export-maltego vuln_db --output builder
-
-# 9. Build and publish the optional static website.
+# Build and publish the static site.
 python3 main.py build-site vuln_db --output builder/www
 sudo rsync -a --delete --links builder/www/ /var/www/html/
+```
+
+Local reports are written to `vuln_db/gemma/`; reproducible prompt, evidence,
+metadata, hashes, model ID, token usage, and timings go to
+`vuln_db/source/gemma/`. Generated analysis pages embed the result between
+protected `GEMMA:ANALYSIS` markers while keeping research notes.
+
+Useful controls:
+
+```bash
+python3 main.py gemma-analyze vuln_db --advisory DSA-5885-1 --force
+python3 main.py analyse-sources vuln_db --with-gemma --limit 5 --resume
+python3 main.py analyse-advisory vuln_db DSA-5885-1 --lmstudio-url http://127.0.0.1:1234
 ```
 
 ### Stage the PCAP source
