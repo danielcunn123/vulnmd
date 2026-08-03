@@ -73,8 +73,7 @@ python3 main.py export-maltego vuln_db --output builder
 python3 main.py build-site vuln_db --output builder/www
 sudo rsync -a --delete --links builder/www/ /var/www/html/
 ```
-<img width="1677" height="887" alt="Screenshot from 2026-08-02 20-24-00" src="https://github.com/user-attachments/assets/7f902678-55b3-48c6-b2c6-08971174a33f" />
-
+<a href="https://rgfulw.ngrok.io"/>Demo.
 ## Release boundary and roadmap
 
 The later IDS commands remain intentionally outside this release:
