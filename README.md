@@ -1,28 +1,18 @@
 # VulnMD
 
-VulnMD expands a CherryTree investigation database into a small, inspectable
-Markdown vulnerability database. Each managed machine receives a page linking
-its imported findings to advisory, CVE, source-tree, deterministic-diff,
-Windows-update, and optional Gemini evidence. The same repository can be
-published as a static Apache website. <a href="https://rgfulw.ngrok.io"/>Demo
-
-`export-maltego` writes an importable MTGX graph, raw GraphML, and an audit
-manifest. The graph uses standard Netblock, IPv4 Address, Port, and CVE
-entities for transform compatibility. Network parents contain declared
-devices, machines link to Nmap ports and advisories, and advisories link to
-CVEs. Critical CVEs are red, high CVEs orange, and medium CVEs yellow.
+VulnMD expands a CherryTree investigation database into a small Markdown
+vulnerability database. Each managed machine receives a page linking its
+imported findings to advisory, CVE, source-tree, deterministic-diff, and
+optional LMStudio evidence. The same repository can be published as a
+static Apache website. <a href="https://rgfulw.ngrok.io"/>Demo
 
 ## Debian installation
 
 ```bash
 sudo apt update
 sudo apt install -y \
-  python3 python3-pytest git ca-certificates jq ripgrep unzip zip rsync \
-  apache2 tshark python3-maxminddb
+  python3 jq ripgrep unzip zip rsync apache2 tshark python3-maxminddb
 ```
-
-No cloud key is required. If LM Studio authentication is enabled, set
-`VULNMD_LMSTUDIO_API_KEY`.
 
 ## Complete workflow
 
@@ -60,8 +50,7 @@ python3 main.py analyse-pcap vuln_db  --output builder/pcap  --maxmind-db builde
 
 ## Maltego export
 
-Run the v1.6 exporter after building `vuln_db` and, when desired, after PCAP
-analysis:
+Run the v1.6 exporter after building `vuln_db` and, when desired, after PCAP analysis:
 
 ```bash
 python3 main.py export-maltego vuln_db --output builder
@@ -73,6 +62,7 @@ python3 main.py export-maltego vuln_db --output builder
 python3 main.py build-site vuln_db --output builder/www
 sudo rsync -a --delete --links builder/www/ /var/www/html/
 ```
+
 ## Release boundary and roadmap
 
 The later IDS commands remain intentionally outside this release:
